@@ -14,6 +14,10 @@ const eventSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide event description"],
   },
+  id: {
+    type: Number,
+    default: -1,
+  },
 });
 
 module.exports = mongoose.model("Event", eventSchema, "events");

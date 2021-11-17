@@ -10,6 +10,7 @@
   "author": "Arsenii Bryndin",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.24.0",
     "dotenv": "^10.0.0",
     "mongoose": "^6.0.12",
     "node-telegram-bot-api": "^0.54.0"

@@ -1,6 +1,7 @@
 const TelegramBot = require("node-telegram-bot-api");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const axios = require("axios");
 
 const getResponse = require("./controllers/messageController");
 const userController = require("./controllers/userController");
@@ -15,10 +16,14 @@ mongoose.connect(process.env.MONGO_URL, {
   useUnifiedTopology: true,
 });
 
+const CRONHOOKS_TOKEN = process.env.CRONHOOKS_TOKEN;
 const TOKEN = process.env.TOKEN;
 const URL = process.env.URL;
 const PORT = process.env.PORT;
 const ADMIN_CODE = process.env.ADMIN_CODE;
+
+axios.defaults.headers.common["Content-Type"] = "application/json";
+axios.defaults.headers.common["Authorization"] = `Bearer ${CRONHOOKS_TOKEN}`;
 
 const bot = new TelegramBot(TOKEN, {
   webHook: {
@@ -133,7 +138,7 @@ bot.onText(RegExp(ADMIN_CODE), async (msg) => {
   const response = isAdmin
     ? getResponse(source).remove
     : getResponse(source).add;
-  console.log(getResponse(source));
+
   bot.sendMessage(id, response, options);
 });
 
@@ -292,6 +297,7 @@ bot.on("message", async (msg) => {
 });
 
 setInterval(async () => {
+  await eventController.deletePastEvents();
   const curDate = new Date();
   const events = await eventController.getEvents();
 
@@ -315,3 +321,11 @@ setInterval(async () => {
     }
   });
 }, 60000);
+
+// Sending an empty HTTP response on request
+// require("http")
+//   .createServer()
+//   .listen(process.env.PORT || 5000)
+//   .on("request", function (req, res) {
+//     res.end("");
+//   });
