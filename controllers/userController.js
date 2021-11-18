@@ -60,7 +60,7 @@ exports.getUserPreferences = async (userID) => {
       parse_mode: "HTML",
     };
 
-    options.notification = userDoc.isSilent ? false : true;
+    options.disable_notification = userDoc.isSilent ? true : false;
 
     return options;
   } catch (err) {
