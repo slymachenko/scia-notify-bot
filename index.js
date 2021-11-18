@@ -323,9 +323,9 @@ setInterval(async () => {
 }, 60000);
 
 // Sending an empty HTTP response on request
-// require("http")
-//   .createServer()
-//   .listen(process.env.PORT || 5000)
-//   .on("request", function (req, res) {
-//     res.end("");
-//   });
+require("http")
+  .createServer()
+  .listen(process.env.PORT || 5000)
+  .on("request", function (req, res) {
+    res.end("");
+  });
