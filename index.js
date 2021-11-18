@@ -298,14 +298,19 @@ setInterval(async () => {
   const events = await eventController.getEvents();
 
   events.forEach(async (event) => {
-    if (
-      (curDate.getHours() == event.date.getHours() - 1 &&
-        curDate.getMinutes() == event.date.getMinutes()) ||
-      (curDate.getDate() == event.date.getDate() - 1 &&
-        curDate.getMonth() == event.date.getMonth() &&
-        curDate.getHours() == event.date.getHours() &&
-        curDate.getMinutes() == event.date.getMinutes())
-    ) {
+    const hourEvent = new Date(event.date.getTime() - 3600 * 1000);
+    const dayEvent = new Date(event.date.getTime() - 24 * 3600 * 1000);
+    const hourCondition =
+      curDate.getDate() == hourEvent.getDate() &&
+      curDate.getMonth() == hourEvent.getMonth() &&
+      curDate.getHours() == hourEvent.getHours() &&
+      curDate.getMinutes() == hourEvent.getMinutes();
+    const dayCondition =
+      curDate.getDate() == dayEvent.getDate() &&
+      curDate.getMonth() == dayEvent.getMonth() &&
+      curDate.getHours() == dayEvent.getHours() &&
+      curDate.getMinutes() == dayEvent.getMinutes();
+    if (hourCondition || dayCondition) {
       const response = getResponse("event");
       const users = await userController.getUsers();
 
