@@ -1,10 +1,7 @@
 const Event = require("../models/eventModel");
-const cronhookController = require("./cronhookController");
 
 exports.createEvent = async (obj) => {
   try {
-    const cronhookID = await cronhookController.setCronhook(obj);
-    obj.id = cronhookID;
     const eventDoc = await Event.create(obj);
 
     return eventDoc;
@@ -45,13 +42,7 @@ exports.deleteEvent = async (name) => {
     const eventDoc = await Event.findOne({ name });
     if (!eventDoc) return false;
 
-    if (eventDoc.id != -1) {
-      await cronhookController.deleteCronhook(eventDoc.id);
-    }
-
     await Event.deleteOne({ name });
-
-    await cronhookController.setCronhook();
 
     return eventDoc;
   } catch (err) {
@@ -64,12 +55,7 @@ exports.deletePastEvents = async () => {
     const eventDocs = await Event.find({ date: { $lt: new Date() } });
 
     eventDocs.forEach(async (el) => {
-      if (el.id != -1) {
-        await cronhookController.deleteCronhook(el.id);
-      }
       await Event.deleteOne({ name: el.name });
-
-      await cronhookController.setCronhook();
     });
 
     return eventDocs;

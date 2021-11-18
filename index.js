@@ -1,7 +1,6 @@
 const TelegramBot = require("node-telegram-bot-api");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-const axios = require("axios");
 
 const getResponse = require("./controllers/messageController");
 const userController = require("./controllers/userController");
@@ -16,19 +15,13 @@ mongoose.connect(process.env.MONGO_URL, {
   useUnifiedTopology: true,
 });
 
-const CRONHOOKS_TOKEN = process.env.CRONHOOKS_TOKEN;
 const TOKEN = process.env.TOKEN;
 const URL = process.env.URL;
 const PORT = process.env.PORT;
 const ADMIN_CODE = process.env.ADMIN_CODE;
 
-axios.defaults.headers.common["Content-Type"] = "application/json";
-axios.defaults.headers.common["Authorization"] = `Bearer ${CRONHOOKS_TOKEN}`;
-
 const bot = new TelegramBot(TOKEN, {
-  webHook: {
-    port: PORT,
-  },
+  polling: true,
 });
 
 bot.setWebHook(`${URL}/bot/${TOKEN}`);
@@ -244,6 +237,9 @@ bot.on("message", async (msg) => {
       if (!day || !month || !year || !hours || !minutes)
         return bot.sendMessage(id, response.dateErr, options);
 
+      if (parseInt(hours) > 23 || parseInt(minutes) > 59 || parseInt(hours) < 7)
+        return bot.sendMessage(id, response.timeErr, options);
+
       const eventDate = new Date(
         year,
         parseInt(month) - 1,
@@ -320,12 +316,12 @@ setInterval(async () => {
       });
     }
   });
-}, 60000);
+}, 59999);
 
 // Sending an empty HTTP response on request
 require("http")
   .createServer()
-  .listen(process.env.SERVER_PORT || 5000)
+  .listen(PORT || 5000)
   .on("request", function (req, res) {
     res.end("");
   });
