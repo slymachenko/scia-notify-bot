@@ -229,7 +229,7 @@ bot.on("message", async (msg) => {
     // msg.text is an event date
     if (request.length === 2) {
       const curDate = new Date();
-      curDate.setDate(curDate.getTime() + 2 * 3600 * 1000);
+      curDate.setTime(curDate.getTime() + 2 * 3600 * 1000);
       const [date, time] = msg.text.split(" ");
       if (!time) return bot.sendMessage(id, response.dateErr, options);
       const [day, month, year] = date.split(".");
@@ -296,7 +296,7 @@ bot.on("message", async (msg) => {
 setInterval(async () => {
   await eventController.deletePastEvents();
   const curDate = new Date();
-  curDate.setDate(curDate.getTime() + 2 * 3600 * 1000);
+  curDate.setTime(curDate.getTime() + 2 * 3600 * 1000);
   const events = await eventController.getEvents();
 
   events.forEach(async (event) => {

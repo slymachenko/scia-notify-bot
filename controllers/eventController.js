@@ -53,7 +53,7 @@ exports.deleteEvent = async (name) => {
 exports.deletePastEvents = async () => {
   try {
     const curDate = new Date();
-    curDate.setDate(curDate.getTime() + 2 * 3600 * 1000);
+    curDate.setTime(curDate.getTime() + 2 * 3600 * 1000);
     const eventDocs = await Event.find({ date: { $lt: curDate } });
 
     eventDocs.forEach(async (el) => {
