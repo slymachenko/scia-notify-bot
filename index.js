@@ -16,15 +16,12 @@ mongoose.connect(process.env.MONGO_URL, {
 });
 
 const TOKEN = process.env.TOKEN;
-const URL = process.env.URL;
 const PORT = process.env.PORT;
 const ADMIN_CODE = process.env.ADMIN_CODE;
 
 const bot = new TelegramBot(TOKEN, {
   polling: true,
 });
-
-bot.setWebHook(`${URL}/bot/${TOKEN}`);
 
 console.log("Bot have been started...");
 
