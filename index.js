@@ -1,6 +1,6 @@
 const TelegramBot = require("node-telegram-bot-api");
-const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 
 const getResponse = require("./controllers/messageController");
 const userController = require("./controllers/userController");
@@ -9,15 +9,16 @@ const requestController = require("./controllers/requestController");
 
 dotenv.config({ path: "./config.env" });
 
+const TOKEN = process.env.TOKEN;
+const MONGO_URL = process.env.MONGO_URL;
+const ADMIN_CODE = process.env.ADMIN_CODE;
+const PORT = process.env.PORT;
+
 // connecting to the MongoDB
-mongoose.connect(process.env.MONGO_URL, {
+mongoose.connect(MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
-const TOKEN = process.env.TOKEN;
-const PORT = process.env.PORT;
-const ADMIN_CODE = process.env.ADMIN_CODE;
 
 const bot = new TelegramBot(TOKEN, {
   polling: true,
@@ -185,6 +186,7 @@ bot.onText(/^\/events$/, async (msg, [source]) => {
 });
 
 // ALL TEXT LISTENER
+
 bot.on("message", async (msg) => {
   const { id } = msg.chat;
   const userID = msg.from.id;
